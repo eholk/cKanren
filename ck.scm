@@ -5,7 +5,7 @@
     ;; framework
     update-s update-c make-a any/var? prefix-s
     lambdam@ identitym composem goal-construct ext-c
-    build-oc oc->proc oc->rands oc->rator run run* prt
+    build-oc oc->proc oc->rands oc->rator run run* run$ prt
     extend-enforce-fns extend-reify-fns
 
     ;; mk
@@ -248,6 +248,15 @@
     ((_ (x) g ...) (run #f (x) g ...))))
 
 ;; ----------------------------------------------------------------
+
+(define-syntax run$
+  (syntax-rules ()
+    ((_ (x) g0 g1 ...)
+     (take$
+       (lambdaf@ ()
+         ((fresh (x) g0 g1 ...
+            (enforce-constraints x) (reify x))
+          empty-a))))))
 
 )
 

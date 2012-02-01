@@ -4,7 +4,8 @@
   (export
     var var? rhs lhs lambdag@ walk walk* mzerog unitg
     choiceg lambdaf@ : take empty-f conde conda ifa
-    condu ifu fresh project onceo succeed fail prt)
+    condu ifu fresh project onceo succeed fail prt
+    take$)
 
   (import (rnrs) (only (chezscheme) pretty-print))
 
@@ -188,6 +189,20 @@
 
 (define onceo (lambda (g) (condu (g))))
 
+(define (take$ f)
+  (letrec ((take$ (lambda (f)
+                    (lambda ()
+                      (case-inf (f)
+                                (() (values '() (lambda () '())))
+                                ((f) ((take$ f)))
+                                ((a) (values a (lambda () '())))
+                                ((a f) (values a (take$ f))))))))
+    (let ((next (take$ f)))
+      (lambda ()
+        (let-values (((x n) (next)))
+          (set! next n)
+          x)))))
+  
 )
 
 (import (mk))
